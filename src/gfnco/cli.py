@@ -264,14 +264,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "benchmark":
             corpus = load_corpus(args.corpus)
             gflownet = (
-                load_checkpoint(args.gflownet_checkpoint)[0]
-                if args.gflownet_checkpoint
-                else None
+                load_checkpoint(args.gflownet_checkpoint)[0] if args.gflownet_checkpoint else None
             )
             reinforce = (
-                load_checkpoint(args.reinforce_checkpoint)[0]
-                if args.reinforce_checkpoint
-                else None
+                load_checkpoint(args.reinforce_checkpoint)[0] if args.reinforce_checkpoint else None
             )
             rows = []
             for index, problem in enumerate(corpus.problems):

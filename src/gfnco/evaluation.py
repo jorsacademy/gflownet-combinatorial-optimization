@@ -439,9 +439,7 @@ def aggregate_rows(rows: tuple[SamplingMetrics, ...]) -> dict[str, dict[str, flo
     groups = sorted({(row.scenario, row.method) for row in rows})
     aggregate: dict[str, dict[str, float | None]] = {}
     for scenario, method in groups:
-        selected = [
-            row for row in rows if row.scenario == scenario and row.method == method
-        ]
+        selected = [row for row in rows if row.scenario == scenario and row.method == method]
         aggregate[f"{scenario}|{method}"] = {
             "instances": float(len(selected)),
             "feasible_rate": statistics.fmean(row.feasible_rate for row in selected),
@@ -452,9 +450,7 @@ def aggregate_rows(rows: tuple[SamplingMetrics, ...]) -> dict[str, dict[str, flo
             ),
             "mean_objective": statistics.fmean(row.mean_objective for row in selected),
             "mean_gap_percent": statistics.fmean(row.mean_gap_percent for row in selected),
-            "mean_optimum_hit_rate": statistics.fmean(
-                row.optimum_hit_rate for row in selected
-            ),
+            "mean_optimum_hit_rate": statistics.fmean(row.optimum_hit_rate for row in selected),
             "mean_near_optimal_mode_coverage": statistics.fmean(
                 row.near_optimal_mode_coverage for row in selected
             ),
@@ -471,9 +467,7 @@ def aggregate_rows(rows: tuple[SamplingMetrics, ...]) -> dict[str, dict[str, flo
             "mean_log_partition_absolute_error": _optional_mean(
                 [row.log_partition_absolute_error for row in selected]
             ),
-            "mean_runtime_seconds": statistics.fmean(
-                row.runtime_seconds for row in selected
-            ),
+            "mean_runtime_seconds": statistics.fmean(row.runtime_seconds for row in selected),
         }
     return aggregate
 

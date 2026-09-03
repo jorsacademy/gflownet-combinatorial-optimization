@@ -154,9 +154,7 @@ def build_target_distribution(
     objectives = np.asarray(exact.objectives, dtype=float)
     expected_objective = float(np.dot(probabilities_array, objectives))
     positive = probabilities_array > 0.0
-    entropy = float(
-        -np.sum(probabilities_array[positive] * np.log(probabilities_array[positive]))
-    )
+    entropy = float(-np.sum(probabilities_array[positive] * np.log(probabilities_array[positive])))
     return TargetDistribution(
         beta=beta,
         masks=exact.masks,
@@ -238,9 +236,7 @@ class ExactFlowPolicy:
         for vertex in range(self.problem.vertex_count):
             if available & (1 << vertex):
                 child = mask | (1 << vertex)
-                numerators[vertex] = self._compute_log_flow(child) - math.log(
-                    selected_count + 1.0
-                )
+                numerators[vertex] = self._compute_log_flow(child) - math.log(selected_count + 1.0)
         probabilities = {
             action: math.exp(log_numerator - log_flow)
             for action, log_numerator in numerators.items()

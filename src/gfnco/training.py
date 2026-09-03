@@ -95,9 +95,7 @@ def _exploration_at(config: TrainingConfig, step: int) -> float:
     if config.steps <= 1:
         return config.exploration_end
     fraction = (step - 1) / float(config.steps - 1)
-    return config.exploration_start + fraction * (
-        config.exploration_end - config.exploration_start
-    )
+    return config.exploration_start + fraction * (config.exploration_end - config.exploration_start)
 
 
 def _sample_problem_beta(
@@ -163,10 +161,7 @@ def _mean_negative_reward_metric(
 
 
 def _clone_state(model: GFlowNetPolicy) -> dict[str, Tensor]:
-    return {
-        key: value.detach().cpu().clone()
-        for key, value in model.state_dict().items()
-    }
+    return {key: value.detach().cpu().clone() for key, value in model.state_dict().items()}
 
 
 def train_trajectory_balance(

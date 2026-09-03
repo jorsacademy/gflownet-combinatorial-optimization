@@ -153,14 +153,10 @@ def split_corpus(
     )
     validation_indices = {int(index) for index in order[:validation_count]}
     train = tuple(
-        problem
-        for index, problem in enumerate(corpus.problems)
-        if index not in validation_indices
+        problem for index, problem in enumerate(corpus.problems) if index not in validation_indices
     )
     validation = tuple(
-        problem
-        for index, problem in enumerate(corpus.problems)
-        if index in validation_indices
+        problem for index, problem in enumerate(corpus.problems) if index in validation_indices
     )
     return (
         ProblemCorpus(train, {**corpus.metadata, "split": "train", "split_seed": seed}),

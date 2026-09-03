@@ -189,14 +189,10 @@ class WeightedGraphProblem:
         bound_violation = max(lower_violation, upper_violation)
         selected = {index for index, value in enumerate(rounded.tolist()) if int(value) == 1}
         conflicts = tuple(
-            edge
-            for edge in self.edges
-            if edge[0] in selected and edge[1] in selected
+            edge for edge in self.edges if edge[0] in selected and edge[1] in selected
         )
         feasible = (
-            integrality_violation <= tolerance
-            and bound_violation <= tolerance
-            and not conflicts
+            integrality_violation <= tolerance and bound_violation <= tolerance and not conflicts
         )
         return FeasibilityAudit(
             feasible=feasible,

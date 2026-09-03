@@ -38,10 +38,7 @@ def test_trajectory_balance_training_updates_model() -> None:
     assert summary.steps_completed == 4
     assert math.isfinite(summary.best_validation_metric)
     assert len(summary.history) == 2
-    assert any(
-        not torch.allclose(before[key], model.state_dict()[key])
-        for key in before
-    )
+    assert any(not torch.allclose(before[key], model.state_dict()[key]) for key in before)
 
 
 def test_reinforce_training_runs_as_mode_seeking_control() -> None:

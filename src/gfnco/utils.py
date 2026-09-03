@@ -24,7 +24,6 @@ def write_json(payload: dict[str, object], path: str | Path) -> None:
     output = Path(path)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(
-        json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True, allow_nan=False)
-        + "\n",
+        json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True, allow_nan=False) + "\n",
         encoding="utf-8",
     )

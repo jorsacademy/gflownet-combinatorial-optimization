@@ -49,9 +49,7 @@ class DifferentiableTrajectory:
             log_reward=self.log_reward,
             forward_log_probability=float(self.forward_log_probability.detach().cpu()),
             backward_log_probability=float(self.backward_log_probability.detach().cpu()),
-            trajectory_balance_residual=float(
-                self.trajectory_balance_residual.detach().cpu()
-            ),
+            trajectory_balance_residual=float(self.trajectory_balance_residual.detach().cpu()),
         )
 
 
@@ -86,9 +84,8 @@ def rollout_model(
             raise RuntimeError("policy state has no valid actions")
         uniform = valid_mask.to(model_probabilities.dtype) / float(valid_count)
         sampling_probabilities = (
-            (1.0 - exploration_epsilon) * model_probabilities.detach()
-            + exploration_epsilon * uniform
-        )
+            1.0 - exploration_epsilon
+        ) * model_probabilities.detach() + exploration_epsilon * uniform
         sampling_probabilities = sampling_probabilities / torch.sum(sampling_probabilities)
         action = int(
             torch.multinomial(
@@ -126,10 +123,7 @@ def rollout_model(
         device=forward_sum.device,
     )
     residual = (
-        model.log_partition(problem, beta)
-        + forward_sum
-        - backward_tensor
-        - log_reward_tensor
+        model.log_partition(problem, beta) + forward_sum - backward_tensor - log_reward_tensor
     )
     if not torch.isfinite(residual):
         raise RuntimeError("trajectory-balance residual is non-finite")

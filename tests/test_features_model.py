@@ -20,10 +20,7 @@ def _permute_problem(
     old_to_new = [0] * problem.vertex_count
     for new_index, old_index in enumerate(new_to_old):
         old_to_new[old_index] = new_index
-    edges = tuple(
-        (old_to_new[u], old_to_new[v])
-        for u, v in problem.edges
-    )
+    edges = tuple((old_to_new[u], old_to_new[v]) for u, v in problem.edges)
     permuted = WeightedGraphProblem(
         name="permuted",
         weights=tuple(problem.weights[index] for index in new_to_old),

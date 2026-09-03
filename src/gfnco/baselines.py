@@ -17,11 +17,7 @@ def greedy_weight_degree_mask(problem: WeightedGraphProblem) -> int:
         available = problem.available_mask(selected)
         if available == 0:
             return selected
-        candidates = [
-            vertex
-            for vertex in range(problem.vertex_count)
-            if available & (1 << vertex)
-        ]
+        candidates = [vertex for vertex in range(problem.vertex_count) if available & (1 << vertex)]
         vertex = max(
             candidates,
             key=lambda index: (

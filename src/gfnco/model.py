@@ -172,10 +172,7 @@ def save_checkpoint(
         "model_config": json.dumps(asdict(model.config), sort_keys=True),
         "metadata": json.dumps(metadata or {}, sort_keys=True),
     }
-    tensors = {
-        key: value.detach().cpu().contiguous()
-        for key, value in model.state_dict().items()
-    }
+    tensors = {key: value.detach().cpu().contiguous() for key, value in model.state_dict().items()}
     save_file(tensors, str(output), metadata=header)
 
 

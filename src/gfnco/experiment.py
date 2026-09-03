@@ -114,12 +114,8 @@ def _evaluation_corpus(
     seed: int,
     size_shift: bool = False,
 ) -> ProblemCorpus:
-    min_vertices = (
-        config.min_size_shift_vertices if size_shift else config.min_train_vertices
-    )
-    max_vertices = (
-        config.max_size_shift_vertices if size_shift else config.max_train_vertices
-    )
+    min_vertices = config.min_size_shift_vertices if size_shift else config.min_train_vertices
+    max_vertices = config.max_size_shift_vertices if size_shift else config.max_train_vertices
     return collect_corpus(
         count=config.evaluation_instances_per_scenario,
         min_vertices=min_vertices,
