@@ -173,7 +173,7 @@ class ExactFlowPolicy:
 
     For a nonterminal independent-set state ``s`` with ``k`` selected vertices,
 
-    ``F(s) = R(s) + sum_v F(s ∪ {v}) / (k + 1)``.
+    ``F(s) = R(s) + sum_v F(s U {v}) / (k + 1)``.
 
     The first term is the flow of the stop edge. The second term follows from the
     uniform backward probability ``1 / (k + 1)`` at every child state. At the root,
