@@ -17,11 +17,11 @@ from gfnco.evaluation import (
 )
 from gfnco.experiment import ResearchConfig, run_research_experiment, save_research_report
 from gfnco.features import feature_schema
-from gfnco.generator import GraphRegime, SUPPORTED_REGIMES, GeneratorConfig, generate_problem
+from gfnco.generator import SUPPORTED_REGIMES, GeneratorConfig, GraphRegime, generate_problem
 from gfnco.model import GFlowNetPolicy, ModelConfig, load_checkpoint, save_checkpoint
 from gfnco.oracle import build_target_distribution, enumerate_independent_sets
-from gfnco.trajectory import sample_model_masks
 from gfnco.training import TrainingConfig, train_reinforce, train_trajectory_balance
+from gfnco.trajectory import sample_model_masks
 from gfnco.utils import write_json
 
 
