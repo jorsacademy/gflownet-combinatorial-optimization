@@ -8,7 +8,7 @@ import torch
 from torch import Tensor
 
 from gfnco.domain import WeightedGraphProblem
-from gfnco.environment import ConstructionState, IndependentSetEnvironment
+from gfnco.environment import IndependentSetEnvironment
 from gfnco.model import GFlowNetPolicy
 
 
