@@ -7,9 +7,9 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import cast
 
+import torch
 from safetensors import safe_open
 from safetensors.torch import save_file
-import torch
 from torch import Tensor, nn
 
 from gfnco.domain import WeightedGraphProblem
@@ -187,7 +187,8 @@ def load_checkpoint(
     source = Path(path)
     with safe_open(str(source), framework="pt", device="cpu") as handle:
         header = handle.metadata()
-        tensors = {key: handle.get_tensor(key) for key in handle.keys()}
+        tensor_keys = handle.keys()
+        tensors = {key: handle.get_tensor(key) for key in tensor_keys}
     if header is None:
         raise ValueError("checkpoint metadata is missing")
     if header.get("checkpoint_schema_version") != CHECKPOINT_SCHEMA_VERSION:
