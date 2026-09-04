@@ -145,7 +145,7 @@ class GFlowNetPolicy(nn.Module):
 
     def log_partition(self, problem: WeightedGraphProblem, beta: float) -> Tensor:
         _, graph_embedding, _ = self._encode(problem, ConstructionState(), beta)
-        value = self.log_partition_head(graph_embedding).squeeze()
+        value: Tensor = self.log_partition_head(graph_embedding).squeeze()
         if not torch.isfinite(value):
             raise RuntimeError("model produced a non-finite log-partition estimate")
         return value
