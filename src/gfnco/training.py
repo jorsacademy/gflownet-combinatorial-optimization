@@ -209,7 +209,7 @@ def train_trajectory_balance(
         if not torch.isfinite(loss):
             raise RuntimeError("trajectory-balance loss became non-finite")
         optimizer.zero_grad(set_to_none=True)
-        loss.backward()
+        loss.backward()  # type: ignore[no-untyped-call]
         gradient_norm = float(
             torch.nn.utils.clip_grad_norm_(model.parameters(), config.gradient_clip_norm)
         )
@@ -313,7 +313,7 @@ def train_reinforce(
         if not torch.isfinite(loss):
             raise RuntimeError("REINFORCE loss became non-finite")
         optimizer.zero_grad(set_to_none=True)
-        loss.backward()
+        loss.backward()  # type: ignore[no-untyped-call]
         gradient_norm = float(
             torch.nn.utils.clip_grad_norm_(model.parameters(), config.gradient_clip_norm)
         )
