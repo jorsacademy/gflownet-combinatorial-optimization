@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Literal, cast
+from typing import Literal
 
 import numpy as np
 
@@ -146,7 +146,7 @@ def generate_problems(
     problems: list[WeightedGraphProblem] = []
     for index in range(count):
         vertex_count = int(rng.integers(min_vertices, max_vertices + 1))
-        regime = cast(GraphRegime, regimes[index % len(regimes)])
+        regime = regimes[index % len(regimes)]
         instance_seed = seed + 104_729 * (index + 1)
         problems.append(
             generate_problem(
