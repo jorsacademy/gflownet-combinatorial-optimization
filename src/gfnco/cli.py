@@ -10,6 +10,7 @@ from typing import cast
 
 from gfnco.dataset import collect_corpus, load_corpus, save_corpus
 from gfnco.evaluation import (
+    SamplingMetrics,
     build_benchmark_report,
     evaluate_problem,
     save_report_csv,
@@ -201,20 +202,20 @@ def main(argv: Sequence[str] | None = None) -> int:
                     beta_scale=max(10.0, max(args.betas)),
                 )
             )
-            config = _training_config(args)
+            training_config = _training_config(args)
             summary = (
                 train_trajectory_balance(
                     model,
                     train_corpus.problems,
                     validation_corpus.problems,
-                    config=config,
+                    config=training_config,
                 )
                 if args.algorithm == "trajectory_balance"
                 else train_reinforce(
                     model,
                     train_corpus.problems,
                     validation_corpus.problems,
-                    config=config,
+                    config=training_config,
                 )
             )
             save_checkpoint(
@@ -269,7 +270,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             reinforce = (
                 load_checkpoint(args.reinforce_checkpoint)[0] if args.reinforce_checkpoint else None
             )
-            rows = []
+            rows: list[SamplingMetrics] = []
             for index, problem in enumerate(corpus.problems):
                 rows.extend(
                     evaluate_problem(
@@ -282,7 +283,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                         scenario=args.scenario,
                     )
                 )
-            report = build_benchmark_report(
+            benchmark_report = build_benchmark_report(
                 tuple(rows),
                 metadata={
                     "corpus_fingerprint": corpus.fingerprint,
@@ -291,13 +292,13 @@ def main(argv: Sequence[str] | None = None) -> int:
                 },
             )
             if args.output_json:
-                save_report_json(report, args.output_json)
+                save_report_json(benchmark_report, args.output_json)
             if args.output_csv:
-                save_report_csv(report, args.output_csv)
-            _write_or_print(report.to_dict(), None)
+                save_report_csv(benchmark_report, args.output_csv)
+            _write_or_print(benchmark_report.to_dict(), None)
             return 0
 
-        config = ResearchConfig(
+        research_config = ResearchConfig(
             training_instances=args.training_instances,
             validation_instances=args.validation_instances,
             evaluation_instances_per_scenario=args.evaluation_instances,
@@ -308,14 +309,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             message_passing_rounds=args.rounds,
             seed=args.seed,
         )
-        gflownet, reinforce, report = run_research_experiment(config)
+        gflownet, reinforce, research_report = run_research_experiment(research_config)
         save_checkpoint(
             gflownet,
             args.gflownet_checkpoint,
             metadata={
                 "algorithm": "trajectory_balance",
-                "research_config": report.to_dict()["config"],
-                "training_corpus": report.training_corpus,
+                "research_config": research_report.to_dict()["config"],
+                "training_corpus": research_report.training_corpus,
             },
         )
         save_checkpoint(
@@ -323,11 +324,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             args.reinforce_checkpoint,
             metadata={
                 "algorithm": "reinforce",
-                "research_config": report.to_dict()["config"],
-                "training_corpus": report.training_corpus,
+                "research_config": research_report.to_dict()["config"],
+                "training_corpus": research_report.training_corpus,
             },
         )
-        save_research_report(report, args.output_report)
+        save_research_report(research_report, args.output_report)
         _write_or_print(
             {
                 "gflownet_checkpoint": str(args.gflownet_checkpoint),

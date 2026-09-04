@@ -7,6 +7,7 @@ import json
 import statistics
 import time
 from collections import Counter
+from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -344,7 +345,7 @@ def evaluate_problem(
             )
         )
 
-    baseline_specs = (
+    baseline_specs: tuple[tuple[str, Callable[[], tuple[int, ...]]], ...] = (
         (
             "reward_biased_sequential",
             lambda: reward_biased_sequential_samples(
@@ -385,7 +386,7 @@ def evaluate_problem(
         )
 
     if include_oracle_controls:
-        oracle_specs = (
+        oracle_specs: tuple[tuple[str, Callable[[], tuple[int, ...]]], ...] = (
             (
                 "exact_flow_policy_oracle",
                 lambda: exact_flow_policy_samples(
