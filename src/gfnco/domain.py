@@ -12,6 +12,18 @@ from typing import cast
 import numpy as np
 
 
+def _require_number(value: object, field_name: str) -> float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f"{field_name} must be a JSON number")
+    return float(value)
+
+
+def _require_integer(value: object, field_name: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError(f"{field_name} must be a JSON integer")
+    return value
+
+
 @dataclass(frozen=True, slots=True)
 class FeasibilityAudit:
     """Independent verification of a candidate binary decision."""
@@ -230,18 +242,27 @@ class WeightedGraphProblem:
 
     @classmethod
     def from_dict(cls, payload: dict[str, object]) -> WeightedGraphProblem:
-        weights = tuple(float(value) for value in cast(list[object], payload["weights"]))
+        raw_weights = cast(list[object], payload["weights"])
+        weights = tuple(_require_number(value, "weight") for value in raw_weights)
         raw_edges = cast(list[object], payload["edges"])
-        edges = tuple(
-            (int(cast(list[object], edge)[0]), int(cast(list[object], edge)[1]))
-            for edge in raw_edges
-        )
+        edges: list[tuple[int, int]] = []
+        for raw_edge in raw_edges:
+            edge = cast(list[object], raw_edge)
+            if len(edge) != 2:
+                raise ValueError("each edge must contain exactly two endpoints")
+            edges.append(
+                (
+                    _require_integer(edge[0], "edge endpoint"),
+                    _require_integer(edge[1], "edge endpoint"),
+                )
+            )
+        raw_seed = payload.get("seed", 0)
         return cls(
             name=str(payload["name"]),
             weights=weights,
-            edges=edges,
+            edges=tuple(edges),
             regime=str(payload.get("regime", "in_distribution")),
-            seed=int(payload.get("seed", 0)),
+            seed=_require_integer(raw_seed, "seed"),
             metadata=cast(dict[str, object], payload.get("metadata", {})),
         )
 
