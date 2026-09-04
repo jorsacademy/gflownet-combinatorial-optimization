@@ -12,4 +12,5 @@
 - Added exact distribution, quality, diversity, residual, partition, and runtime metrics.
 - Added size, density, topology, weight, combined, and beta distribution-shift evaluation.
 - Added deterministic corpora, SHA-256 fingerprints, Safetensors checkpoints, CLI workflows, tests, documentation, and Python 3.11/3.12 CI.
+- Hardened strict typing at JSON, PyTorch, sampler, and command-line integration boundaries.
 - Added PolyForm Noncommercial 1.0.0 licensing.
